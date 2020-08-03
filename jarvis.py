@@ -1,0 +1,82 @@
+import pyttsx3
+import datetime
+import speech_recognition as sr
+import webbrowser
+import wikipedia
+import os
+
+engine=pyttsx3.init('sapi5')
+voices=engine.getProperty('voices')
+engine.setProperty('voices',voices[0])
+
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
+
+def take_command():
+    r=sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.pause_threshold=0.5
+        audio=r.listen(source)
+
+    try:
+        print("Recognizing...")
+        query=r.recognize_google(audio,language="en-in")
+        print(query)
+    except Exception as e:
+        print("Please say again!")
+    return query
+
+
+
+if __name__=="__main__":
+    speak("Hello welcome this is a desktop assistant ")
+    speak("how may i help you")
+    speak("to exit any time say thank you")
+    end=False
+    while not end:
+        query=take_command().lower()
+        if 'open google' in query:
+            speak("Opening google")
+            webbrowser.open("google.com")
+        elif 'open youtube' in query:
+            speak("Opening youtube")
+            webbrowser.open("youtube.com")
+        elif 'open geeksforgeeks' in query:
+            speak("Opening youtube")
+            webbrowser.open("geeksforgeeks.com")
+        elif 'time' in query:
+            str_time=datetime.datetime.now().strftime("%H:%M:%S")
+            s="The time is"+str_time
+            speak(s)
+        elif 'movies' in query:
+            movies_dir="E:\\Movies"
+            movies=os.listdir(movies_dir)
+            speak("Playing movies")
+            for i in range(len(movies)):
+                os.startfile(os.path.join(movies_dir,movies[i]))
+        elif 'old photos' in query:
+            photos_dir="E:\\Old Photos\\Home"
+            photos=os.listdir(photos_dir)
+            os.startfile(os.path.join(photos_dir,photos[0]))
+        elif 'khichdi' in query:
+            tv_dir="F:\\TV Series\\Khichdi"
+            khichdi=os.listdir(tv_dir)
+            speak("playing khichdi")
+            os.startfile(os.path.join(tv_dir,khichdi[0]))
+        elif 'mahabharat' in query:
+            tv_dir = "F:\\TV Series\\Mahabharat"
+            mahabharat= os.listdir(tv_dir)
+            speak("Playing mahabharat")
+            os.startfile(os.path.join(tv_dir, mahabharat[0]))
+        elif 'mr bean' in query:
+            tv_dir = "F:\\TV Series\\Mr Bean\\Mr. Bean"
+            bean= os.listdir(tv_dir)
+            speak("Playing mr bean")
+            os.startfile(os.path.join(tv_dir, bean[0]))
+        elif 'name' in query:
+            speak("My name is jarvis")
+        elif 'thank you' in query:
+            speak("Welcome")
+            end=True
